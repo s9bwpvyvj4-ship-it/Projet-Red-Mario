@@ -90,15 +90,26 @@ func DisplayMonster(m *Monster) {
 func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	Clear()
 
-	fmt.Println(Cyan + "╔══════════════════════════════════════════════════════════╗" + Reset)
-	fmt.Printf(Cyan+"║"+Reset+"                  %s⚔  TOUR %d ⚔%s          	 "+Cyan+"  	   ║\n"+Reset,
-		Bold+Yellow, turn, Reset)
-	fmt.Println(Cyan + "╚══════════════════════════════════════════════════════════╝" + Reset)
+	// ===== Bandeau du tour (centré, dynamique) =====
+	titreTour := fmt.Sprintf("⚔  TOUR %d ⚔", turn)
+	contenuTour := "  " + Bold + Yellow + titreTour + Reset + "  "
+	largeurTour := visibleLength(contenuTour)
+	margeTour := strings.Repeat(" ", 10)
+
+	fmt.Println(Cyan + "╔" + strings.Repeat("═", largeurTour+40) + "╗" + Reset)
+	fmt.Println(Cyan + "║" + Reset + margeTour + contenuTour + strings.Repeat(" ", largeurTour+40-visibleLength(contenuTour)-10) + Cyan + "║" + Reset)
+	fmt.Println(Cyan + "╚" + strings.Repeat("═", largeurTour+40) + "╝" + Reset)
 	fmt.Println()
 
-	fmt.Println(Red + "                    ╔════════════════╗" + Reset)
-	fmt.Printf(Red+"                    ║"+Reset+"  %-12s  "+Red+"║\n"+Reset, monster.Name)
-	fmt.Println(Red + "                    ╚════════════════╝" + Reset)
+	// ===== Cadre dynamique autour du nom du monstre =====
+	nomMonstre := "  " + Bold + monster.Name + Reset + "  "
+	largeurNom := visibleLength(nomMonstre)
+	bordureNom := strings.Repeat("═", largeurNom)
+	marge := strings.Repeat(" ", 20)
+
+	fmt.Println(marge + Red + "╔" + bordureNom + "╗" + Reset)
+	fmt.Println(marge + Red + "║" + Reset + nomMonstre + Red + "║" + Reset)
+	fmt.Println(marge + Red + "╚" + bordureNom + "╝" + Reset)
 
 	DisplayMonster(monster)
 
@@ -237,7 +248,6 @@ func (c *Character) CharacterTurn(monster *Monster) {
 			return
 
 		case 2:
-			// ✅ *Monster satisfait Damageable → le Champignon Poison touche le monstre
 			if c.AccessInventoryInCombat(monster) {
 				return
 			}
