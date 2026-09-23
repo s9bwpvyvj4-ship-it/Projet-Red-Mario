@@ -90,18 +90,35 @@ func DisplayMonster(m *Monster) {
 func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	Clear()
 
-	// ===== Bandeau du tour (centré, dynamique) =====
+	// ==================== BANDEAU DU TOUR ====================
 	titreTour := fmt.Sprintf("⚔  TOUR %d ⚔", turn)
-	contenuTour := "  " + Bold + Yellow + titreTour + Reset + "  "
-	largeurTour := visibleLength(contenuTour)
-	margeTour := strings.Repeat(" ", 10)
+	largeurBandeau := 56
 
-	fmt.Println(Cyan + "╔" + strings.Repeat("═", largeurTour+40) + "╗" + Reset)
-	fmt.Println(Cyan + "║" + Reset + margeTour + contenuTour + strings.Repeat(" ", largeurTour+40-visibleLength(contenuTour)-10) + Cyan + "║" + Reset)
-	fmt.Println(Cyan + "╚" + strings.Repeat("═", largeurTour+40) + "╝" + Reset)
+	// ⚠️ AJUSTEMENT : ton terminal compte les emojis pour 1 colonne
+	// au lieu de 2. On corrige manuellement.
+	ajustement := 2 // -2 par emoji qui s'affiche différemment
+
+	largeurVisibleReelle := visibleLength(titreTour) - ajustement
+
+	paddingTotal := largeurBandeau - largeurVisibleReelle
+	if paddingTotal < 0 {
+		paddingTotal = 0
+	}
+	paddingGauche := paddingTotal / 2
+	paddingDroite := paddingTotal - paddingGauche
+
+	contenuBandeau := strings.Repeat(" ", paddingGauche) +
+		Bold + Yellow + titreTour + Reset +
+		strings.Repeat(" ", paddingDroite)
+
+	bordureBandeau := strings.Repeat("═", largeurBandeau)
+
+	fmt.Println(Cyan + "╔" + bordureBandeau + "╗" + Reset)
+	fmt.Println(Cyan + "║" + Reset + contenuBandeau + Cyan + "║" + Reset)
+	fmt.Println(Cyan + "╚" + bordureBandeau + "╝" + Reset)
 	fmt.Println()
 
-	// ===== Cadre dynamique autour du nom du monstre =====
+	// ==================== CADRE DU MONSTRE ====================
 	nomMonstre := "  " + Bold + monster.Name + Reset + "  "
 	largeurNom := visibleLength(nomMonstre)
 	bordureNom := strings.Repeat("═", largeurNom)
