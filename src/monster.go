@@ -273,8 +273,6 @@ func (m *Monster) DisplayFull() {
 		Yellow, Reset, m.Initiative)
 }
 
-
-// GiveRewards donne les récompenses du monstre au joueur
 func (m *Monster) GiveRewards(player *Character) {
 	fmt.Println()
 	SlowPrint(Yellow+fmt.Sprintf("💰 +%d pièces d'or", m.GoldReward), 20*time.Millisecond)

@@ -178,7 +178,6 @@ func (c *Character) UseItem(item string, target Damageable) {
 	}
 }
 
-// ==================== POTIONS ====================
 
 func (c *Character) TakePot() {
 	if !c.RemoveInventory("Champignon Super") {

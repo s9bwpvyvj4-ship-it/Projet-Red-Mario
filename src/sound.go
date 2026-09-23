@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-// ==================== LECTURE AUDIO GÉNÉRIQUE ====================
-
-// PlaySound joue un fichier audio selon l'OS (MP3 ou WAV)
 func PlaySound(filePath string) {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		fallbackBeep()
@@ -47,16 +44,12 @@ func PlaySound(filePath string) {
 	_ = cmd.Start()
 }
 
-// fallbackBeep : bip système si le son n'est pas disponible
 func fallbackBeep() {
 	fmt.Print("\a")
 }
 
-// ==================== MUSIQUE DE FOND ====================
-
 var musicCmd *exec.Cmd
 
-// PlayBackgroundMusic lance la musique de fond du menu
 func PlayBackgroundMusic() {
 	StopBackgroundMusic()
 
@@ -90,7 +83,6 @@ func PlayBackgroundMusic() {
 	_ = musicCmd.Start()
 }
 
-// StopBackgroundMusic arrête la musique de fond
 func StopBackgroundMusic() {
 	if musicCmd != nil && musicCmd.Process != nil {
 		_ = musicCmd.Process.Kill()
@@ -98,11 +90,9 @@ func StopBackgroundMusic() {
 	}
 }
 
-// ==================== MUSIQUE DE COMBAT ====================
 
 var battleCmd *exec.Cmd
 
-// PlayBattleMusic lance la musique de combat
 func PlayBattleMusic() {
 	StopBackgroundMusic()
 
@@ -145,8 +135,6 @@ func StopBattleMusic() {
 	}
 }
 
-// ==================== SONS DU JEU ====================
-
 func PlayDeathSound() {
 	PlaySound("sounds/mario-death.mp3")
 }
@@ -167,7 +155,6 @@ func PlayQuitSound() {
 	PlaySound("sounds/quit.mp3")
 }
 
-// ==================== BIPS DE SECOURS ====================
 
 func BeepShort() {
 	fmt.Print("\a")

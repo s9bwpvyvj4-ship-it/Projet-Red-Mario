@@ -6,10 +6,8 @@ import (
 )
 
 func main() {
-	// 🎵 Démarrer la musique de fond
 	PlayBackgroundMusic()
 
-	// 🔇 Arrêter la musique quand on quitte
 	defer StopBackgroundMusic()
 
 	Clear()
@@ -17,10 +15,8 @@ func main() {
 	fmt.Println(Cyan + "Bienvenue dans Mario RPG Adventure !" + Reset)
 	Pause()
 
-	// ==================== CRÉATION DU PERSONNAGE ====================
 	player := CharacterCreation()
 
-	// ==================== MENU PRINCIPAL ====================
 	for {
 		Clear()
 		PrintTitle("🍄 MENU PRINCIPAL")
@@ -89,7 +85,6 @@ func main() {
 	}
 }
 
-// ==================== QUI SONT-ILS ? ====================
 
 func WhoAreThey() {
 	fmt.Println()
