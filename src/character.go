@@ -52,7 +52,7 @@ func InitCharacter(name, class string, maxHP, manaMax int) *Character {
 		Inventory:          []string{},
 		MaxInventory:       10,
 		InventoryUpgrades:  0,
-		Skills:             []string{"Saut"},
+		Skills:             []string{"coup de poing"},
 		Equipment:          Equipment{},
 		Initiative:         10,
 		Exp:                0,
