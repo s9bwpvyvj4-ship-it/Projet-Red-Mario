@@ -113,7 +113,7 @@ func (c *Character) CraftItem(r Recipe) {
 
 	fmt.Println()
 	fmt.Println(Green + "╔════════════════════════════════════════╗" + Reset)
-	fmt.Println(Green + "║       ⚒  FABRICATION RÉUSSIE ! ⚒       ║" + Reset)
+	fmt.Println(Green + "║       ⚒  FABRICATION RÉUSSIE ! ⚒	     ║" + Reset)
 	fmt.Println(Green + "╚════════════════════════════════════════╝" + Reset)
 	fmt.Printf(Green+"✓ Vous fabriquez : %s\n"+Reset, r.Name)
 	fmt.Printf(Yellow+"  -%d pièces (reste : %d)\n"+Reset, r.Cost, c.Gold)

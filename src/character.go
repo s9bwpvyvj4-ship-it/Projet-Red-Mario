@@ -232,7 +232,7 @@ func (c *Character) DisplayInfo() {
 	fmt.Println()
 
 	fmt.Println(Cyan + "╔══════════════════════════════════════════╗" + Reset)
-	fmt.Printf(Cyan+"║"+Reset+"  %s%-38s%s"+Cyan+"║\n"+Reset,
+	fmt.Printf(Cyan+"║"+Reset+" %s%-38s%s"+Cyan+"   ║\n"+Reset,
 		Bold+Yellow, c.Name, Reset)
 	fmt.Println(Cyan + "╠══════════════════════════════════════════╣" + Reset)
 	fmt.Printf(Cyan+"║"+Reset+"  Classe     : %-27s"+Cyan+"║\n"+Reset, c.Class)
@@ -250,9 +250,9 @@ func (c *Character) DisplayInfo() {
 		fmt.Sprintf("%d / %d", len(c.Inventory), c.MaxInventory))
 	fmt.Println(Cyan + "╠══════════════════════════════════════════╣" + Reset)
 	fmt.Printf(Cyan+"║"+Reset+"  Équipement :%-28s"+Cyan+"║\n"+Reset, "")
-	fmt.Printf(Cyan+"║"+Reset+"    Tête  : %-31s"+Cyan+"║\n"+Reset, emptyOr(c.Equipment.Head, "—"))
-	fmt.Printf(Cyan+"║"+Reset+"    Torse : %-31s"+Cyan+"║\n"+Reset, emptyOr(c.Equipment.Torso, "—"))
-	fmt.Printf(Cyan+"║"+Reset+"    Pieds : %-31s"+Cyan+"║\n"+Reset, emptyOr(c.Equipment.Feet, "—"))
+	fmt.Printf(Cyan+"║"+Reset+"  Tête  : %-31s"+Cyan+" ║\n"+Reset, emptyOr(c.Equipment.Head, "—"))
+	fmt.Printf(Cyan+"║"+Reset+"  Torse : %-31s"+Cyan+" ║\n"+Reset, emptyOr(c.Equipment.Torso, "—"))
+	fmt.Printf(Cyan+"║"+Reset+"  Pieds : %-31s"+Cyan+" ║\n"+Reset, emptyOr(c.Equipment.Feet, "—"))
 	fmt.Printf(Cyan+"║"+Reset+"  Sorts      : %-27s"+Cyan+"║\n"+Reset, strings.Join(c.Skills, ", "))
 	fmt.Println(Cyan + "╚══════════════════════════════════════════╝" + Reset)
 }
