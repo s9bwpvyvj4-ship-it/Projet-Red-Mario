@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-// ==================== STRUCTURE ====================
-
 type Monster struct {
 	Name       string
 	MaxHP      int
@@ -17,9 +15,7 @@ type Monster struct {
 	GoldReward int
 }
 
-// ==================== INITIALISATIONS ====================
 
-// InitGoomba crée un Goomba d'entraînement (facile)
 func InitGoomba() Monster {
 	return Monster{
 		Name:       "Goomba d'entraînement",
@@ -32,7 +28,6 @@ func InitGoomba() Monster {
 	}
 }
 
-// InitThwomp crée un Thwomp (moyen)
 func InitThwomp() Monster {
 	return Monster{
 		Name:       "Thwomp",
@@ -45,7 +40,6 @@ func InitThwomp() Monster {
 	}
 }
 
-// InitBowser crée Bowser (boss final)
 func InitBowser() Monster {
 	return Monster{
 		Name:       "Bowser",
@@ -58,9 +52,6 @@ func InitBowser() Monster {
 	}
 }
 
-// ==================== PATTERN D'ATTAQUE ====================
-
-// Pattern du monstre : attaque normale, sauf tous les 3 tours (x2)
 func (m *Monster) Pattern(turn int, player *Character) {
 	damage := m.Attack
 	special := false
@@ -70,44 +61,36 @@ func (m *Monster) Pattern(turn int, player *Character) {
 		special = true
 	}
 
-	// Nettoyage et séparateur
 	Clear()
 	fmt.Println(Red + "═══════════════════════════════════════════════════════════" + Reset)
 	fmt.Println()
 
-	// Annonce de l'attaque spéciale
 	if special {
 		SlowPrint(Purple+"⚡ Le monstre prépare une attaque spéciale !", 20*time.Millisecond)
 		time.Sleep(600 * time.Millisecond)
 		fmt.Println()
 	}
 
-	// Animation de l'attaque
 	AnimateAttack(m.Name, player.Name)
 
-	// Effet de flash sur les dégâts
 	FlashDamage()
 
-	// Application des dégâts
 	player.CurrentHP -= damage
 	if player.CurrentHP < 0 {
 		player.CurrentHP = 0
 	}
 
-	// Message de dégâts
 	SlowPrint(Red+fmt.Sprintf("%s inflige %d dégâts à %s !",
 		m.Name, damage, player.Name), 15*time.Millisecond)
 
 	time.Sleep(300 * time.Millisecond)
 	fmt.Println()
 
-	// Affichage de la barre de vie mise à jour
 	fmt.Printf("  %s%s%s  %s  %s%d/%d%s\n",
 		Bold, player.Name, Reset,
 		HPBar(player.CurrentHP, player.MaxHP, 25),
 		Green, player.CurrentHP, player.MaxHP, Reset)
 
-	// Vérification de mort
 	if player.CurrentHP <= 0 {
 		time.Sleep(300 * time.Millisecond)
 		fmt.Println()
@@ -115,9 +98,6 @@ func (m *Monster) Pattern(turn int, player *Character) {
 	}
 }
 
-// ==================== AFFICHAGE DE LA VIE ====================
-
-// DisplayHP affiche la vie du monstre avec une barre visuelle
 func (m *Monster) DisplayHP() {
 	fmt.Printf("  %s%s%s  %s  %s%d/%d PV%s\n",
 		Bold, m.Name, Reset,
@@ -125,15 +105,11 @@ func (m *Monster) DisplayHP() {
 		Red, m.CurrentHP, m.MaxHP, Reset)
 }
 
-// DisplayHPSimple affiche la vie du monstre (version texte simple)
 func (m *Monster) DisplayHPSimple() {
 	fmt.Printf("%s : %s%d / %d PV%s\n",
 		m.Name, hpColorMonster(m), m.CurrentHP, m.MaxHP, Reset)
 }
 
-// ==================== COULEUR SELON HP ====================
-
-// hpColorMonster retourne la couleur selon le ratio de vie
 func hpColorMonster(m *Monster) string {
 	if m.MaxHP <= 0 {
 		return Red
@@ -148,15 +124,11 @@ func hpColorMonster(m *Monster) string {
 	return Red
 }
 
-// ==================== ANIMATIONS SPÉCIALES MONSTRE ====================
-
-// AppearAnimation anime l'apparition du monstre
 func (m *Monster) AppearAnimation() {
 	fmt.Println()
 	SlowPrint(Yellow+"⚡ Un "+m.Name+" apparaît !", 30*time.Millisecond)
 	time.Sleep(300 * time.Millisecond)
 
-	// Petit tremblement
 	for i := 0; i < 3; i++ {
 		fmt.Print("  ")
 		fmt.Print(Red + "▓▓▓" + Reset)
@@ -170,12 +142,10 @@ func (m *Monster) AppearAnimation() {
 	time.Sleep(400 * time.Millisecond)
 }
 
-// DeathAnimation anime la mort du monstre
 func (m *Monster) DeathAnimation() {
 	SlowPrint(Red+"Le "+m.Name+" s'effondre...", 25*time.Millisecond)
 	time.Sleep(200 * time.Millisecond)
 
-	// Effet de disparition progressif
 	art := monsterArt(m.Name)
 	if art == "" {
 		time.Sleep(300 * time.Millisecond)
@@ -198,9 +168,6 @@ func (m *Monster) DeathAnimation() {
 	SlowPrint(Green+"✨ Le monstre est vaincu !", 20*time.Millisecond)
 }
 
-// ==================== ART DU MONSTRE ====================
-
-// monsterArt retourne l'ASCII art du monstre
 func monsterArt(name string) string {
 	switch name {
 	case "Goomba d'entraînement":
@@ -213,7 +180,6 @@ func monsterArt(name string) string {
 	return ""
 }
 
-// displayPartialArt affiche seulement les premières lignes d'un art
 func displayPartialArt(lines []string, keepLines int) {
 	max := keepLines
 	if max > len(lines) {
@@ -224,7 +190,6 @@ func displayPartialArt(lines []string, keepLines int) {
 	}
 }
 
-// splitLines découpe une string multi-lignes en slice
 func splitLines(s string) []string {
 	var lines []string
 	current := ""
@@ -242,16 +207,12 @@ func splitLines(s string) []string {
 	return lines
 }
 
-// ==================== ATTAQUE SPÉCIALE DU MONSTRE ====================
 
-// AttackPlayer attaque le joueur avec une animation personnalisée
 func (m *Monster) AttackPlayer(player *Character, damage int) {
-	// Charge
 	fmt.Printf("  %s%s%s charge", Bold, m.Name, Reset)
 	LoadingDots()
 	time.Sleep(300 * time.Millisecond)
 
-	// Frappe
 	AnimateAttack(m.Name, player.Name)
 	FlashDamage()
 
@@ -263,14 +224,10 @@ func (m *Monster) AttackPlayer(player *Character, damage int) {
 	SlowPrint(Red+fmt.Sprintf("%s inflige %d dégâts !", m.Name, damage), 15*time.Millisecond)
 }
 
-// ==================== VÉRIFICATIONS ====================
-
-// IsDeadMonster vérifie si le monstre est mort
 func (m *Monster) IsDeadMonster() bool {
 	return m.CurrentHP <= 0
 }
 
-// HealthRatio retourne le ratio de vie (0.0 à 1.0)
 func (m *Monster) HealthRatio() float64 {
 	if m.MaxHP <= 0 {
 		return 0
@@ -278,7 +235,6 @@ func (m *Monster) HealthRatio() float64 {
 	return float64(m.CurrentHP) / float64(m.MaxHP)
 }
 
-// StatusEmoji retourne un emoji selon l'état du monstre
 func (m *Monster) StatusEmoji() string {
 	ratio := m.HealthRatio()
 	switch {
@@ -295,36 +251,28 @@ func (m *Monster) StatusEmoji() string {
 	}
 }
 
-// ==================== AFFICHAGE COMPLET DU MONSTRE ====================
-
-// DisplayFull affiche le monstre en entier (art + infos)
 func (m *Monster) DisplayFull() {
-	// ASCII art
 	art := monsterArt(m.Name)
 	if art != "" {
 		fmt.Println(art)
 	}
 
-	// Nom encadré
 	fmt.Println(Red + "╔════════════════════════════════════════╗" + Reset)
 	fmt.Printf(Red+"║"+Reset+"  %s%-36s%s"+Red+"║\n"+Reset,
 		Bold, m.Name, Reset)
 	fmt.Println(Red + "╚════════════════════════════════════════╝" + Reset)
 
-	// Barre de vie
 	fmt.Printf("  %sPV%s : %s  %s%d/%d%s  %s\n",
 		Green, Reset,
 		HPBar(m.CurrentHP, m.MaxHP, 20),
 		hpColorMonster(m), m.CurrentHP, m.MaxHP, Reset,
 		m.StatusEmoji())
 
-	// Stats
 	fmt.Printf("  %sAttaque%s : %d   %sInitiative%s : %d\n\n",
 		Red, Reset, m.Attack,
 		Yellow, Reset, m.Initiative)
 }
 
-// ==================== RÉCOMPENSES ====================
 
 // GiveRewards donne les récompenses du monstre au joueur
 func (m *Monster) GiveRewards(player *Character) {
