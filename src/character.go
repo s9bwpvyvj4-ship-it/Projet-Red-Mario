@@ -49,7 +49,7 @@ func InitCharacter(name, class string, maxHP, manaMax int) *Character {
 		Mana:               manaMax,
 		ManaMax:            manaMax,
 		Gold:               100,
-		Inventory:          []string{},
+		Inventory:          []string{"Champignon Super", "Champignon Super", "Champignon Super"}, // ⚠️ VÉRIFIE ICI
 		MaxInventory:       10,
 		InventoryUpgrades:  0,
 		Skills:             []string{"coup de poing"},
