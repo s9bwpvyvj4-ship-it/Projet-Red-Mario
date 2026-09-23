@@ -45,7 +45,7 @@ func main() {
 			Pause()
 
 		case 2:
-			player.AccessInventory()
+			player.AccessInventory(nil) // hors combat → pas de cible
 
 		case 3:
 			player.Merchant()
@@ -67,10 +67,7 @@ func main() {
 			Pause()
 
 		case 0:
-			// 🎵 Son de sortie
 			PlayQuitSound()
-
-			// 🔇 Arrêter la musique de fond
 			StopBackgroundMusic()
 
 			Clear()
@@ -82,7 +79,6 @@ func main() {
 			fmt.Println(Yellow + "╚════════════════════════════════════════╝" + Reset)
 			fmt.Println()
 
-			// Laisser le son se terminer
 			time.Sleep(2 * time.Second)
 			return
 
@@ -93,7 +89,7 @@ func main() {
 	}
 }
 
-// ==================== QUI SONT-ILS ? (Mission 6) ====================
+// ==================== QUI SONT-ILS ? ====================
 
 func WhoAreThey() {
 	fmt.Println()

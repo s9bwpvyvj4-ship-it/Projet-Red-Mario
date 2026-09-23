@@ -8,7 +8,6 @@ import (
 
 // ==================== GESTION DE BASE ====================
 
-// AddInventory ajoute un item à l'inventaire (retourne false si plein)
 func (c *Character) AddInventory(item string) bool {
 	if len(c.Inventory) >= c.MaxInventory {
 		fmt.Println(Red + "❌ Inventaire plein !" + Reset)
@@ -18,7 +17,6 @@ func (c *Character) AddInventory(item string) bool {
 	return true
 }
 
-// RemoveInventory retire un item de l'inventaire
 func (c *Character) RemoveInventory(item string) bool {
 	for i, v := range c.Inventory {
 		if v == item {
@@ -29,7 +27,6 @@ func (c *Character) RemoveInventory(item string) bool {
 	return false
 }
 
-// CountItem compte combien de fois un item est présent dans l'inventaire
 func (c *Character) CountItem(item string) int {
 	count := 0
 	for _, v := range c.Inventory {
@@ -40,17 +37,14 @@ func (c *Character) CountItem(item string) int {
 	return count
 }
 
-// HasItem vérifie si un item est dans l'inventaire
 func (c *Character) HasItem(item string) bool {
 	return c.CountItem(item) > 0
 }
 
-// CanAddItem vérifie s'il reste de la place dans l'inventaire
 func (c *Character) CanAddItem() bool {
 	return len(c.Inventory) < c.MaxInventory
 }
 
-// InventoryFullPercent retourne le pourcentage de remplissage
 func (c *Character) InventoryFullPercent() int {
 	if c.MaxInventory == 0 {
 		return 100
@@ -58,7 +52,6 @@ func (c *Character) InventoryFullPercent() int {
 	return len(c.Inventory) * 100 / c.MaxInventory
 }
 
-// ListItemsByPrefix retourne tous les items commençant par un préfixe
 func (c *Character) ListItemsByPrefix(prefix string) []string {
 	var result []string
 	for _, item := range c.Inventory {
@@ -71,8 +64,9 @@ func (c *Character) ListItemsByPrefix(prefix string) []string {
 
 // ==================== AFFICHAGE ====================
 
-// AccessInventory affiche l'inventaire et permet d'utiliser un item (hors combat)
-func (c *Character) AccessInventory() {
+// AccessInventory affiche l'inventaire hors combat.
+// target = nil → les items offensifs n'auront pas de cible.
+func (c *Character) AccessInventory(target Damageable) {
 	for {
 		Clear()
 		PrintTitle("INVENTAIRE")
@@ -101,15 +95,14 @@ func (c *Character) AccessInventory() {
 		}
 
 		item := c.Inventory[choice-1]
-		c.UseItem(item)
+		c.UseItem(item, target)
 		Pause()
 	}
 }
 
-// AccessInventoryInCombat affiche l'inventaire pendant un combat.
-// Retourne true si un item a été utilisé (tour consommé),
-// false si le joueur a juste consulté puis est revenu.
-func (c *Character) AccessInventoryInCombat() bool {
+// AccessInventoryInCombat affiche l'inventaire en combat.
+// Retourne true si un item a été utilisé (tour consommé).
+func (c *Character) AccessInventoryInCombat(opponent Damageable) bool {
 	for {
 		Clear()
 		PrintTitle("INVENTAIRE (combat)")
@@ -129,7 +122,7 @@ func (c *Character) AccessInventoryInCombat() bool {
 
 		choice := AskInt("\nChoix : ")
 		if choice == 0 {
-			return false // ✅ Retour sans consommer le tour
+			return false
 		}
 		if choice < 1 || choice > len(c.Inventory) {
 			fmt.Println(Red + "Choix invalide." + Reset)
@@ -138,13 +131,12 @@ func (c *Character) AccessInventoryInCombat() bool {
 		}
 
 		item := c.Inventory[choice-1]
-		c.UseItem(item)
+		c.UseItem(item, opponent)
 		Pause()
-		return true // ✅ Item utilisé → tour consommé
+		return true
 	}
 }
 
-// itemIcon retourne un emoji selon l'item
 func itemIcon(item string) string {
 	switch {
 	case strings.Contains(item, "Champignon Super"):
@@ -176,13 +168,13 @@ func itemIcon(item string) string {
 
 // ==================== UTILISATION D'ITEMS ====================
 
-// UseItem utilise un item de l'inventaire
-func (c *Character) UseItem(item string) {
+// UseItem utilise un item. target = cible des items offensifs (peut être nil).
+func (c *Character) UseItem(item string, target Damageable) {
 	switch item {
 	case "Champignon Super":
 		c.TakePot()
 	case "Champignon Poison":
-		c.PoisonPot()
+		c.PoisonPot(target)
 	case "Fleur de Feu":
 		c.SpellBook()
 	case "Potion de Mana":
@@ -196,7 +188,6 @@ func (c *Character) UseItem(item string) {
 
 // ==================== POTIONS ====================
 
-// TakePot utilise un Champignon Super (soin +50 PV)
 func (c *Character) TakePot() {
 	if !c.RemoveInventory("Champignon Super") {
 		fmt.Println(Red + "Pas de Champignon Super dans l'inventaire." + Reset)
@@ -210,27 +201,35 @@ func (c *Character) TakePot() {
 	fmt.Printf(Green+"PV : %d / %d\n"+Reset, c.CurrentHP, c.MaxHP)
 }
 
-// PoisonPot utilise un Champignon Poison (-10 PV/s pendant 3s)
-func (c *Character) PoisonPot() {
+// PoisonPot lance un Champignon Poison sur la CIBLE (pas sur soi-même).
+func (c *Character) PoisonPot(target Damageable) {
 	if !c.RemoveInventory("Champignon Poison") {
 		fmt.Println(Red + "Pas de Champignon Poison dans l'inventaire." + Reset)
 		return
 	}
-	fmt.Println(Purple + "☠ Vous utilisez Champignon Poison !" + Reset)
+
+	if target == nil {
+		fmt.Println(Yellow + "☠ Vous lancez le Champignon Poison... mais personne en face !" + Reset)
+		return
+	}
+
+	fmt.Println(Purple + "☠ Vous lancez Champignon Poison sur " + target.GetName() + " !" + Reset)
+
 	for i := 1; i <= 3; i++ {
 		time.Sleep(1 * time.Second)
-		c.CurrentHP -= 10
-		if c.CurrentHP < 0 {
-			c.CurrentHP = 0
+		hp := target.GetHP() - 10
+		if hp < 0 {
+			hp = 0
 		}
-		fmt.Printf(Red+"Poison ! PV : %d / %d\n"+Reset, c.CurrentHP, c.MaxHP)
-		if c.IsDead() {
+		target.SetHP(hp)
+		fmt.Printf(Red+"Poison ! %s PV : %d / %d\n"+Reset,
+			target.GetName(), hp, target.GetMaxHP())
+		if target.IsDead() {
 			return
 		}
 	}
 }
 
-// DrinkManaPot utilise une Potion de Mana (+30 Mana)
 func (c *Character) DrinkManaPot() {
 	if !c.RemoveInventory("Potion de Mana") {
 		fmt.Println(Red + "Pas de Potion de Mana dans l'inventaire." + Reset)
@@ -246,7 +245,6 @@ func (c *Character) DrinkManaPot() {
 
 // ==================== SORTS ====================
 
-// SpellBook apprend le sort "Boule de Feu" grâce à la Fleur de Feu
 func (c *Character) SpellBook() {
 	for _, s := range c.Skills {
 		if s == "Boule de Feu" {
@@ -261,7 +259,6 @@ func (c *Character) SpellBook() {
 
 // ==================== ÉQUIPEMENT ====================
 
-// EquipItem équipe un item et applique le bonus de PV
 func (c *Character) EquipItem(item string) {
 	var slot *string
 	var bonus int
@@ -280,7 +277,6 @@ func (c *Character) EquipItem(item string) {
 		return
 	}
 
-	// Si un équipement est déjà équipé, on le renvoie dans l'inventaire
 	if *slot != "" {
 		oldItem := *slot
 		oldBonus := equipmentBonus(oldItem)
@@ -298,7 +294,6 @@ func (c *Character) EquipItem(item string) {
 	fmt.Printf(Green+"✓ Vous équipez : %s (+%d PV max)\n"+Reset, item, bonus)
 }
 
-// equipmentBonus retourne le bonus de PV d'un équipement
 func equipmentBonus(item string) int {
 	switch item {
 	case "Casquette Mario":
@@ -313,8 +308,6 @@ func equipmentBonus(item string) int {
 
 // ==================== UPGRADE INVENTAIRE ====================
 
-// UpgradeInventorySlot augmente la capacité de l'inventaire de +10
-// Limité à 3 utilisations
 func (c *Character) UpgradeInventorySlot() bool {
 	if c.InventoryUpgrades >= 3 {
 		fmt.Println(Red + "Vous avez déjà utilisé toutes vos augmentations !" + Reset)
@@ -328,7 +321,6 @@ func (c *Character) UpgradeInventorySlot() bool {
 
 // ==================== AFFICHAGE DES ÉQUIPEMENTS ====================
 
-// DisplayEquipment affiche l'équipement actuel du personnage
 func (c *Character) DisplayEquipment() {
 	fmt.Println(Cyan + "\n=== Équipement actuel ===" + Reset)
 	fmt.Printf("  🧢 Tête  : %s\n", emptyOr(c.Equipment.Head, "—"))
@@ -338,7 +330,6 @@ func (c *Character) DisplayEquipment() {
 
 // ==================== UTILITAIRES ====================
 
-// hasPrefixAny vérifie si une string commence par l'un des préfixes
 func hasPrefixAny(s string, prefixes []string) bool {
 	for _, p := range prefixes {
 		if strings.HasPrefix(s, p) {
