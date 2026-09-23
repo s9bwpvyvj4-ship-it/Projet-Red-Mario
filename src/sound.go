@@ -8,74 +8,114 @@ import (
 	"time"
 )
 
+<<<<<<< HEAD
 func PlaySound(filePath string) {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+=======
+// ==================== LECTURE AUDIO ====================
+
+func PlaySound(filePath string) {
+	if _, err := os.Stat(filePath); err != nil {
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 		fallbackBeep()
 		return
 	}
-
-	var cmd *exec.Cmd
 
 	switch runtime.GOOS {
 	case "darwin":
+<<<<<<< HEAD
 		cmd = exec.Command("afplay", filePath)
+=======
+		exec.Command("afplay", filePath).Start()
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 
 	case "linux":
 		if _, err := exec.LookPath("mpg123"); err == nil {
-			cmd = exec.Command("mpg123", "-q", filePath)
-		} else if _, err := exec.LookPath("aplay"); err == nil {
-			cmd = exec.Command("aplay", filePath)
-		} else if _, err := exec.LookPath("paplay"); err == nil {
-			cmd = exec.Command("paplay", filePath)
+			exec.Command("mpg123", "-q", filePath).Start()
 		} else {
 			fallbackBeep()
-			return
 		}
 
 	case "windows":
-		cmd = exec.Command("powershell", "-c",
-			fmt.Sprintf("(New-Object Media.SoundPlayer '%s').PlaySync()", filePath))
+		playMP3(filePath)
 
 	default:
 		fallbackBeep()
-		return
 	}
+<<<<<<< HEAD
 
 	_ = cmd.Start()
 }
 
+=======
+}
+
+// playMP3 utilise PowerShell pour lire un MP3 avec Windows
+func playMP3(filePath string) {
+	script := fmt.Sprintf(`
+Add-Type -AssemblyName presentationCore
+$player = New-Object System.Windows.Media.MediaPlayer
+$player.Open([Uri]::new((Resolve-Path '%s').Path))
+$player.Play()
+Start-Sleep -Seconds 3
+$player.Close()
+`, filePath)
+
+	exec.Command(
+		"powershell",
+		"-NoProfile",
+		"-Command",
+		script,
+	).Start()
+}
+
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 func fallbackBeep() {
 	fmt.Print("\a")
 }
 
 
+<<<<<<< HEAD
 var musicCmd *exec.Cmd 
+=======
+var musicCmd *exec.Cmd
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 
 func PlayBackgroundMusic() {
 	StopBackgroundMusic()
 
 	filePath := "sounds/theme.mp3"
 
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+	if _, err := os.Stat(filePath); err != nil {
 		return
 	}
 
 	switch runtime.GOOS {
+	case "windows":
+		musicCmd = exec.Command(
+			"powershell",
+			"-NoProfile",
+			"-Command",
+			fmt.Sprintf(`
+Add-Type -AssemblyName presentationCore
+$player = New-Object System.Windows.Media.MediaPlayer
+$player.Open([Uri]::new((Resolve-Path '%s').Path))
+$player.Play()
+while ($true) {
+	Start-Sleep -Seconds 1
+}
+`, filePath),
+		)
+
 	case "darwin":
 		musicCmd = exec.Command("afplay", filePath)
 
 	case "linux":
 		if _, err := exec.LookPath("mpg123"); err == nil {
 			musicCmd = exec.Command("mpg123", "-q", filePath)
-		} else if _, err := exec.LookPath("aplay"); err == nil {
-			musicCmd = exec.Command("aplay", filePath)
 		} else {
 			return
 		}
-
-	case "windows":
-		musicCmd = exec.Command("powershell", "-c",
-			fmt.Sprintf("(New-Object Media.SoundPlayer '%s').PlayLooping()", filePath))
 
 	default:
 		return
@@ -92,34 +132,52 @@ func StopBackgroundMusic() {
 }
 
 
+<<<<<<< HEAD
 var battleCmd *exec.Cmd 
+=======
+var battleCmd *exec.Cmd
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 
 func PlayBattleMusic() {
 	StopBackgroundMusic()
 
 	filePath := "sounds/battle.mp3"
 
+<<<<<<< HEAD
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+=======
+	if _, err := os.Stat(filePath); err != nil {
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 		PlayBackgroundMusic()
 		return
 	}
 
 	switch runtime.GOOS {
+	case "windows":
+		battleCmd = exec.Command(
+			"powershell",
+			"-NoProfile",
+			"-Command",
+			fmt.Sprintf(`
+Add-Type -AssemblyName presentationCore
+$player = New-Object System.Windows.Media.MediaPlayer
+$player.Open([Uri]::new((Resolve-Path '%s').Path))
+$player.Play()
+while ($true) {
+	Start-Sleep -Seconds 1
+}
+`, filePath),
+		)
+
 	case "darwin":
 		battleCmd = exec.Command("afplay", filePath)
 
 	case "linux":
 		if _, err := exec.LookPath("mpg123"); err == nil {
 			battleCmd = exec.Command("mpg123", "-q", filePath)
-		} else if _, err := exec.LookPath("aplay"); err == nil {
-			battleCmd = exec.Command("aplay", filePath)
 		} else {
 			return
 		}
-
-	case "windows":
-		battleCmd = exec.Command("powershell", "-c",
-			fmt.Sprintf("(New-Object Media.SoundPlayer '%s').PlayLooping()", filePath))
 
 	default:
 		return
@@ -135,6 +193,11 @@ func StopBattleMusic() {
 	}
 }
 
+<<<<<<< HEAD
+=======
+// ==================== SONS DU JEU ====================
+
+>>>>>>> 7287e4d6f999db582656947acc8a74bd9b791839
 func PlayDeathSound() {
 	PlaySound("sounds/mario-death.mp3")
 }
