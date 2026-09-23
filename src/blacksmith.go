@@ -27,7 +27,7 @@ func (c *Character) Blacksmith() {
 		// 🎨 ASCII art du forgeron
 		fmt.Println(Yellow + BlacksmithArt + Reset)
 
-		PrintTitle("⚒  FORGERON")
+		PrintTitle("🔨 FORGERON")
 
 		fmt.Printf("  %sVotre bourse : %d pièces%s\n", Yellow, c.Gold, Reset)
 		fmt.Printf("  %sInventaire  : %d / %d%s\n\n",
