@@ -103,7 +103,7 @@ func WhoAreThey() {
 	fmt.Println(Yellow + "║                                                ║" + Reset)
 	fmt.Println(Yellow + "║                     ABBA                       ║" + Reset)
 	fmt.Println(Yellow + "║                                                ║" + Reset)
-	fmt.Println(Yellow + "║                     QUEEN                      ║" + Reset)
+	fmt.Println(Yellow + "║                   SPIELBERG                    ║" + Reset)
 	fmt.Println(Yellow + "║                                                ║" + Reset)
 	fmt.Println(Yellow + "╚════════════════════════════════════════════════╝" + Reset)
 }

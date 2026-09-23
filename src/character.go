@@ -99,7 +99,7 @@ func CharacterCreation() *Character {
 		fmt.Println()
 		fmt.Println("  1. " + Blue + "Humain" + Reset + "   (100 PV, 50 Mana) - Équilibré")
 		fmt.Println("  2. " + Blue + "Toad" + Reset + "     (80 PV, 80 Mana)  - Mage agile")
-		fmt.Println("  3. " + Blue + "Koopa" + Reset + "    (90 PV, 70 Mana)  - Soutien")
+		fmt.Println("  3. " + Blue + "Koopa" + Reset + "    (120 PV, 40 Mana)  - Soutien")
 		fmt.Println()
 
 		for {
@@ -110,7 +110,7 @@ func CharacterCreation() *Character {
 			case 2:
 				class, maxHP, manaMax = "Toad", 80, 80
 			case 3:
-				class, maxHP, manaMax = "Koopa", 90, 70
+				class, maxHP, manaMax = "Koopa", 120, 40
 			default:
 				fmt.Println(Red + "Choix invalide." + Reset)
 				continue

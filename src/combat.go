@@ -468,8 +468,8 @@ func (c *Character) CastHealSpell() bool {
 // spellManaCost retourne le coût en mana d'un sort
 func spellManaCost(spell string) int {
 	switch spell {
-	case "Saut":
-		return 5
+	case "coup de poing":
+		return 0
 	case "Boule de Feu":
 		return 15
 	case "Étoile":
@@ -481,12 +481,12 @@ func spellManaCost(spell string) int {
 // spellDamage retourne les dégâts d'un sort (0 pour les soins)
 func spellDamage(spell string) int {
 	switch spell {
-	case "Saut":
+	case "coup de poing":
 		return 8
 	case "Boule de Feu":
 		return 18
 	case "Étoile":
 		return 0 // soin, pas de dégâts
 	}
-	return 0
+	return 10
 }
