@@ -6,7 +6,6 @@ import (
 	"unicode"
 )
 
-// ==================== STRUCTURES ====================
 
 type Equipment struct {
 	Head  string
@@ -37,7 +36,6 @@ type Character struct {
 	InventoryPurchases int
 }
 
-// ==================== INITIALISATION ====================
 
 func InitCharacter(name, class string, maxHP, manaMax int) *Character {
 	return &Character{
@@ -49,7 +47,7 @@ func InitCharacter(name, class string, maxHP, manaMax int) *Character {
 		Mana:               manaMax,
 		ManaMax:            manaMax,
 		Gold:               100,
-		Inventory:          []string{"Champignon Super", "Champignon Super", "Champignon Super"}, // ⚠️ VÉRIFIE ICI
+		Inventory:          []string{"Champignon Super", "Champignon Super", "Champignon Super"},
 		MaxInventory:       10,
 		InventoryUpgrades:  0,
 		Skills:             []string{"coup de poing"},
@@ -62,20 +60,16 @@ func InitCharacter(name, class string, maxHP, manaMax int) *Character {
 	}
 }
 
-// ==================== CRÉATION ====================
 
-// CharacterCreation gère tout le flux de création de personnage
 func CharacterCreation() *Character {
 	Clear()
 	fmt.Println(Yellow + MarioLogo + Reset)
 
-	// Étape 1 : Choix du personnage
 	choice := askCharacterChoice()
 
 	var name, class string
 	var maxHP, manaMax int
 
-	// Étape 2a : Personnages prédéfinis (Mario, Luigi, Peach)
 	if choice >= 1 && choice <= 3 {
 		switch choice {
 		case 1:
@@ -86,7 +80,6 @@ func CharacterCreation() *Character {
 			name, class, maxHP, manaMax = "Princesse Peach", "Princesse Peach", 90, 70
 		}
 	} else {
-		// Étape 2b : Personnage personnalisé → demander nom puis classe
 		Clear()
 		PrintTitle("📝 CRÉATION DE PERSONNAGE")
 		fmt.Println()
@@ -119,10 +112,8 @@ func CharacterCreation() *Character {
 		}
 	}
 
-	// Étape 3 : Créer le personnage
 	player := InitCharacter(name, class, maxHP, manaMax)
 
-	// Étape 4 : Afficher l'ASCII art
 	Clear()
 	DisplayCharacterArt(class)
 
@@ -137,7 +128,6 @@ func CharacterCreation() *Character {
 	return player
 }
 
-// askCharacterChoice affiche le menu principal de choix de personnage
 func askCharacterChoice() int {
 	Clear()
 	PrintTitle("🎮 CHOISIS TON PERSONNAGE")
@@ -158,7 +148,6 @@ func askCharacterChoice() int {
 	}
 }
 
-// askName demande un nom (uniquement pour la création personnalisée)
 func askName() string {
 	for {
 		fmt.Print(Green + "→ " + Reset)
@@ -191,7 +180,6 @@ func formatName(name string) string {
 	return string(runes)
 }
 
-// DisplayCharacterArt affiche l'ASCII art du personnage selon sa classe
 func DisplayCharacterArt(class string) {
 	switch class {
 	case "Mario":
@@ -224,10 +212,8 @@ func DisplayCharacterArt(class string) {
 	}
 }
 
-// ==================== AFFICHAGE ====================
 
 func (c *Character) DisplayInfo() {
-	// 🎨 Afficher l'ASCII art du personnage en premier
 	DisplayCharacterArt(c.Class)
 	fmt.Println()
 
@@ -278,7 +264,6 @@ func emptyOr(s, fallback string) string {
 	return s
 }
 
-// ==================== MORT / RÉSURRECTION ====================
 
 func (c *Character) IsDead() bool {
 	if c.CurrentHP <= 0 {
@@ -290,7 +275,6 @@ func (c *Character) IsDead() bool {
 	return false
 }
 
-// ==================== PROGRESSION ====================
 
 func (c *Character) GainExp(amount int) {
 	c.Exp += amount
@@ -304,7 +288,6 @@ func (c *Character) GainExp(amount int) {
 		c.Mana = c.ManaMax
 		c.Initiative += 1
 
-		// 🎁 Bonus : agrandissement automatique de l'inventaire
 		c.MaxInventory += 2
 
 		fmt.Println(Purple + "\n★ ★ ★ NIVEAU SUPÉRIEUR ! ★ ★ ★" + Reset)
@@ -314,7 +297,6 @@ func (c *Character) GainExp(amount int) {
 		fmt.Printf("  +1 Initiative (%d)\n", c.Initiative)
 		fmt.Printf(Green+"  +2 Slots d'inventaire (%d)\n"+Reset, c.MaxInventory)
 
-		// 🎁 Bonus : sort de guérison au niveau 3
 		if c.Level == 3 && !hasSpell(c.Skills, "Étoile") {
 			c.Skills = append(c.Skills, "Étoile")
 			fmt.Println()

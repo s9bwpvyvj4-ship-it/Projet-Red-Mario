@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// ==================== GESTION DE BASE ====================
 
 func (c *Character) AddInventory(item string) bool {
 	if len(c.Inventory) >= c.MaxInventory {
@@ -62,10 +61,7 @@ func (c *Character) ListItemsByPrefix(prefix string) []string {
 	return result
 }
 
-// ==================== AFFICHAGE ====================
 
-// AccessInventory affiche l'inventaire hors combat.
-// target = nil → les items offensifs n'auront pas de cible.
 func (c *Character) AccessInventory(target Damageable) {
 	for {
 		Clear()
@@ -100,8 +96,6 @@ func (c *Character) AccessInventory(target Damageable) {
 	}
 }
 
-// AccessInventoryInCombat affiche l'inventaire en combat.
-// Retourne true si un item a été utilisé (tour consommé).
 func (c *Character) AccessInventoryInCombat(opponent Damageable) bool {
 	for {
 		Clear()
@@ -166,9 +160,7 @@ func itemIcon(item string) string {
 	}
 }
 
-// ==================== UTILISATION D'ITEMS ====================
 
-// UseItem utilise un item. target = cible des items offensifs (peut être nil).
 func (c *Character) UseItem(item string, target Damageable) {
 	switch item {
 	case "Champignon Super":
@@ -201,7 +193,6 @@ func (c *Character) TakePot() {
 	fmt.Printf(Green+"PV : %d / %d\n"+Reset, c.CurrentHP, c.MaxHP)
 }
 
-// PoisonPot lance un Champignon Poison sur la CIBLE (pas sur soi-même).
 func (c *Character) PoisonPot(target Damageable) {
 	if !c.RemoveInventory("Champignon Poison") {
 		fmt.Println(Red + "Pas de Champignon Poison dans l'inventaire." + Reset)
@@ -243,7 +234,6 @@ func (c *Character) DrinkManaPot() {
 	fmt.Printf(Blue+"Mana : %d / %d\n"+Reset, c.Mana, c.ManaMax)
 }
 
-// ==================== SORTS ====================
 
 func (c *Character) SpellBook() {
 	for _, s := range c.Skills {
@@ -257,7 +247,6 @@ func (c *Character) SpellBook() {
 	fmt.Println(Green + "🔥 Vous apprenez : Boule de Feu !" + Reset)
 }
 
-// ==================== ÉQUIPEMENT ====================
 
 func (c *Character) EquipItem(item string) {
 	var slot *string
@@ -306,7 +295,6 @@ func equipmentBonus(item string) int {
 	return 0
 }
 
-// ==================== UPGRADE INVENTAIRE ====================
 
 func (c *Character) UpgradeInventorySlot() bool {
 	if c.InventoryUpgrades >= 3 {
@@ -319,7 +307,6 @@ func (c *Character) UpgradeInventorySlot() bool {
 	return true
 }
 
-// ==================== AFFICHAGE DES ÉQUIPEMENTS ====================
 
 func (c *Character) DisplayEquipment() {
 	fmt.Println(Cyan + "\n=== Équipement actuel ===" + Reset)
@@ -328,7 +315,6 @@ func (c *Character) DisplayEquipment() {
 	fmt.Printf("  👢 Pieds : %s\n", emptyOr(c.Equipment.Feet, "—"))
 }
 
-// ==================== UTILITAIRES ====================
 
 func hasPrefixAny(s string, prefixes []string) bool {
 	for _, p := range prefixes {

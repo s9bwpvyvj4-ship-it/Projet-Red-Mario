@@ -73,7 +73,7 @@ func main() {
 			Clear()
 			fmt.Println()
 			fmt.Println(Yellow + "╔════════════════════════════════════════╗" + Reset)
-			fmt.Println(Yellow + "║     👋 MERCI D'AVOIR JOUÉ ! 👋         ║" + Reset)
+			fmt.Println(Yellow + "║     👋 MERCI D'AVOIR JOUÉ ! 👋          ║" + Reset)
 			fmt.Println(Yellow + "║                                        ║" + Reset)
 			fmt.Println(Yellow + "║          À BIENTÔT DANS MARIO !        ║" + Reset)
 			fmt.Println(Yellow + "╚════════════════════════════════════════╝" + Reset)
