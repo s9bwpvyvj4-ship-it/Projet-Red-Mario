@@ -91,7 +91,7 @@ func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	Clear()
 
 	fmt.Println(Cyan + "╔══════════════════════════════════════════════════════════╗" + Reset)
-	fmt.Printf(Cyan+"║"+Reset+"                  %s⚔  TOUR %d ⚔%s                     "+Cyan+"║\n"+Reset,
+	fmt.Printf(Cyan+"║"+Reset+"                  %s⚔  TOUR %d ⚔%s          	 "+Cyan+"  	   ║\n"+Reset,
 		Bold+Yellow, turn, Reset)
 	fmt.Println(Cyan + "╚══════════════════════════════════════════════════════════╝" + Reset)
 	fmt.Println()
