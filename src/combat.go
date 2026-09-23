@@ -207,7 +207,7 @@ func TrainingFight(player *Character, monster Monster) {
 		player.IsDead()
 	} else {
 		fmt.Println(Green + "╔══════════════════════════════════════╗" + Reset)
-		fmt.Println(Green + "║          ★ ★ ★ VICTOIRE ! ★ ★ ★       ║" + Reset)
+		fmt.Println(Green + "║          ★ ★ ★ VICTOIRE ! ★ ★ ★      ║" + Reset)
 		fmt.Println(Green + "╚══════════════════════════════════════╝" + Reset)
 
 		PlayVictorySound()
