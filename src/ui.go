@@ -245,7 +245,6 @@ const BlacksmithArt = `
 
 	  `
 
-
 func PrintTitle(title string) {
 	contenu := "  " + Bold + Yellow + title + Reset + "  "
 	largeur := visibleLength(contenu)

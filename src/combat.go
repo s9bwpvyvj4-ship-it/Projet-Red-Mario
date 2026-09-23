@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// ==================== UTILITAIRES VISUELS ====================
 
 func HPBar(current, max int, width int) string {
 	if max <= 0 {
@@ -74,7 +73,6 @@ func AnimateAttack(attacker, target string) {
 	time.Sleep(300 * time.Millisecond)
 }
 
-// ==================== AFFICHAGE DU COMBAT ====================
 
 func DisplayMonster(m *Monster) {
 	switch m.Name {
@@ -90,7 +88,6 @@ func DisplayMonster(m *Monster) {
 func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	Clear()
 
-	// ==================== BANDEAU DU TOUR ====================
 	titreTour := fmt.Sprintf("⚔  TOUR %d ⚔", turn)
 	largeurBandeau := 56
 
@@ -118,7 +115,6 @@ func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	fmt.Println(Cyan + "╚" + bordureBandeau + "╝" + Reset)
 	fmt.Println()
 
-	// ==================== CADRE DU MONSTRE ====================
 	nomMonstre := "  " + Bold + monster.Name + Reset + "  "
 	largeurNom := visibleLength(nomMonstre)
 	bordureNom := strings.Repeat("═", largeurNom)
@@ -159,7 +155,6 @@ func DisplayCombatUI(player *Character, monster *Monster, turn int) {
 	fmt.Println(White + "──────────────────────────────────────────────────────────" + Reset)
 }
 
-// ==================== COMBAT PRINCIPAL ====================
 
 func TrainingFight(player *Character, monster Monster) {
 	PlayBattleMusic()
@@ -223,7 +218,6 @@ func TrainingFight(player *Character, monster Monster) {
 		Pause()
 	}
 
-	// ==================== FIN DU COMBAT ====================
 	Clear()
 
 	if player.CurrentHP <= 0 {
@@ -249,7 +243,6 @@ func TrainingFight(player *Character, monster Monster) {
 	Pause()
 }
 
-// ==================== TOUR DU JOUEUR ====================
 
 func (c *Character) CharacterTurn(monster *Monster) {
 	for {
@@ -307,7 +300,6 @@ func (c *Character) PlayerAttack(monster *Monster, attackName string, damage int
 		Red, monster.CurrentHP, monster.MaxHP, Reset)
 }
 
-// ==================== SORTS EN COMBAT ====================
 
 func (c *Character) UseSpellInCombat(monster *Monster) bool {
 	Clear()
@@ -404,7 +396,6 @@ func (c *Character) UseSpellInCombat(monster *Monster) bool {
 	return true
 }
 
-// ==================== SORT DE SOIN ÉTOILE ====================
 
 func (c *Character) CastHealSpell() bool {
 	Clear()
@@ -444,7 +435,6 @@ func (c *Character) CastHealSpell() bool {
 	return true
 }
 
-// ==================== COÛTS ET DÉGÂTS DES SORTS ====================
 
 func spellManaCost(spell string) int {
 	switch spell {
