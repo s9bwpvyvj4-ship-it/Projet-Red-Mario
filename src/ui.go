@@ -25,7 +25,6 @@ const (
 	BgCyan  = "\033[46m"
 )
 
-// Colorize retourne un texte coloré
 func Colorize(text, color string) string {
 	return color + text + Reset
 }
@@ -242,20 +241,20 @@ const BlacksmithArt = `
    ==-=+=****+      
      ==.=+***=-=    
            +===    
-          +=-==     
+          +=-==    
 
 	  `
 
+
 func PrintTitle(title string) {
-	visibleLen := visibleLength(title)
-	line := strings.Repeat("═", visibleLen+4)
+	contenu := "  " + Bold + Yellow + title + Reset + "  "
+	largeur := visibleLength(contenu)
+	bordure := strings.Repeat("═", largeur)
 
-	fmt.Println(Cyan + "╔" + line + "╗" + Reset)
-	fmt.Printf(Cyan+"║"+Reset+"  %s%s%s  "+Cyan+"║\n"+Reset,
-		Bold+Yellow, title, Reset)
-	fmt.Println(Cyan + "╚" + line + "╝" + Reset)
+	fmt.Println(Cyan + "╔" + bordure + "╗" + Reset)
+	fmt.Println(Cyan + "║" + Reset + contenu + Cyan + "║" + Reset)
+	fmt.Println(Cyan + "╚" + bordure + "╝" + Reset)
 }
-
 func visibleLength(s string) int {
 	length := 0
 	inEscape := false
@@ -270,9 +269,28 @@ func visibleLength(s string) int {
 			}
 			continue
 		}
-		length++
+		if estEmojiLarge(r) {
+			length += 2
+		} else {
+			length += 1
+		}
 	}
 	return length
+}
+func estEmojiLarge(r rune) bool {
+	if r >= 0x1F300 && r <= 0x1FAFF {
+		return true
+	}
+	if r >= 0x2600 && r <= 0x27BF {
+		return true
+	}
+	if r >= 0x2B00 && r <= 0x2BFF {
+		return true
+	}
+	if r >= 0x1F000 && r <= 0x1F2FF {
+		return true
+	}
+	return false
 }
 
 func PrintSeparator() {
@@ -283,15 +301,18 @@ func PrintBox(text string) {
 	lines := strings.Split(text, "\n")
 	maxLen := 0
 	for _, line := range lines {
-		if len(line) > maxLen {
-			maxLen = len(line)
+		if l := visibleLength(line); l > maxLen {
+			maxLen = l
 		}
 	}
 	border := strings.Repeat("═", maxLen+4)
 
 	fmt.Println(Cyan + "╔" + border + "╗" + Reset)
 	for _, line := range lines {
-		pad := maxLen - len(line)
+		pad := maxLen - visibleLength(line)
+		if pad < 0 {
+			pad = 0
+		}
 		fmt.Printf(Cyan+"║"+Reset+"  %s%s  "+Cyan+"║\n"+Reset,
 			line, strings.Repeat(" ", pad))
 	}
@@ -303,6 +324,7 @@ func AskInt(prompt string) int {
 	var choice int
 	_, err := fmt.Scanln(&choice)
 	if err != nil {
+		// vider le buffer en cas d'erreur
 		var discard string
 		fmt.Scanln(&discard)
 		return -1
@@ -332,12 +354,13 @@ func Confirm(prompt string) bool {
 }
 
 func PrintHeader(title string) {
+	contenu := "  " + Bold + Yellow + title + Reset + "  "
+	largeur := visibleLength(contenu)
+
 	fmt.Println()
-	fmt.Println(Cyan + "┌" + strings.Repeat("─", 50) + "┐" + Reset)
-	fmt.Printf(Cyan+"│"+Reset+"  %s%s%s%s"+Cyan+"│\n"+Reset,
-		Bold+Yellow, title,
-		Reset, strings.Repeat(" ", 46-visibleLength(title)))
-	fmt.Println(Cyan + "└" + strings.Repeat("─", 50) + "┘" + Reset)
+	fmt.Println(Cyan + "┌" + strings.Repeat("─", largeur) + "┐" + Reset)
+	fmt.Println(Cyan + "│" + Reset + contenu + Cyan + "│" + Reset)
+	fmt.Println(Cyan + "└" + strings.Repeat("─", largeur) + "┘" + Reset)
 }
 
 func PrintSuccess(msg string) {
